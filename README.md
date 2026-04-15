@@ -10,8 +10,9 @@ Analyzed a $23.1M B2B sales database to evaluate growth, product mix, and region
 - Finance & Insurance and Energy were the strongest customer segments
 
 ## Tools
-SQL (PostgreSQL)
+SQL, PostgreSQL
 
 ## Files
-- analysis_queries.sql
-- SQL Final Project Technical Report.pdf
+- analysis_queries.sql — final SQL queries used for analysis
+- sales_analysis_report.pdf — supporting report
+- sales_analysis_presentation.pdf — presentation deck

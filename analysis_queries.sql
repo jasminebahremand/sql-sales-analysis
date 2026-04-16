@@ -8,7 +8,7 @@
 -- 1. Current State of the Business
 -- =====================================
 
--- Top customer transactions
+-- Top 10 customers by single transaction value
 SELECT
     a.name AS customer_name,
     o.total_amt_usd
@@ -65,6 +65,7 @@ ORDER BY num_employees DESC;
 -- =====================================
 
 -- Total revenue by product type
+-- Note: Standard leads in volume but Gloss generates disproportionately higher revenue relative to order count
 SELECT
     SUM(standard_amt_usd) AS standard_revenue,
     SUM(gloss_amt_usd) AS gloss_revenue,
@@ -76,6 +77,13 @@ SELECT
     SUM(standard_qty) AS standard_qty_sold,
     SUM(gloss_qty) AS gloss_qty_sold,
     SUM(poster_qty) AS poster_qty_sold
+FROM orders;
+
+-- Revenue share by product type (highlights Gloss overperformance relative to order share)
+SELECT
+    ROUND(SUM(standard_amt_usd) / SUM(total_amt_usd) * 100, 2) AS standard_revenue_pct,
+    ROUND(SUM(gloss_amt_usd) / SUM(total_amt_usd) * 100, 2) AS gloss_revenue_pct,
+    ROUND(SUM(poster_amt_usd) / SUM(total_amt_usd) * 100, 2) AS poster_revenue_pct
 FROM orders;
 
 -- Monthly revenue trend
@@ -129,7 +137,7 @@ ORDER BY month;
 
 
 -- =====================================
--- 4. Regional Sales Efficiency
+-- 4. Regional Sales Performance & Rep Allocation
 -- =====================================
 
 -- Number of accounts by region
@@ -188,6 +196,7 @@ GROUP BY sales_rep_id
 ORDER BY num_accounts DESC;
 
 -- Revenue per sales representative by region
+-- Key finding: Northeast has 21 of 51 reps but lowest revenue per rep ($368K vs $645K in Southeast)
 SELECT
     r.name AS region,
     COUNT(DISTINCT sr.id) AS num_sales_reps,
@@ -223,7 +232,8 @@ ORDER BY total_revenue DESC;
 -- 5. Industry Segmentation
 -- =====================================
 
--- Count customers by industry category
+-- Customer count by industry category
+-- Note: Uses keyword matching on account names to infer industry
 SELECT 'Food' AS industry_category, COUNT(*) AS customer_count
 FROM accounts
 WHERE name ILIKE '%Food%'
@@ -285,6 +295,7 @@ WHERE name ILIKE '%health%'
    OR name ILIKE '%pharma%';
 
 -- Total orders by industry category
+-- Note: Counts distinct orders per industry; Finance & Insurance and Energy are top segments
 SELECT
     industry_category,
     COUNT(DISTINCT o.id) AS total_orders
@@ -359,6 +370,8 @@ ORDER BY total_orders DESC;
 -- 6. Marketing Channel Analysis
 -- =====================================
 
+-- Web engagement by channel and region
+-- Key finding: Direct channel dominates across all regions; Twitter and banner ads are underutilized
 SELECT
     q.region_id,
     we.channel,

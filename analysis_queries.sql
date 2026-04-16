@@ -1,12 +1,12 @@
-/* =====================================
-   SQL SALES ANALYSIS: PARCH & POSEY
-   B2B Sales Analytics · Revenue & Operations
-   ===================================== */
+-- =====================================
+-- SQL Sales Analysis
+-- B2B Sales Analytics · Revenue & Operations
+-- =====================================
 
 
-/* =====================================
-   1. CURRENT STATE OF THE BUSINESS
-   ===================================== */
+-- =====================================
+-- 1. Current State of the Business
+-- =====================================
 
 -- Top customer transactions
 SELECT
@@ -60,9 +60,9 @@ GROUP BY r.name
 ORDER BY num_employees DESC;
 
 
-/* =====================================
-   2. REVENUE BY PRODUCT TYPE
-   ===================================== */
+-- =====================================
+-- 2. Revenue by Product Type
+-- =====================================
 
 -- Total revenue by product type
 SELECT
@@ -108,9 +108,9 @@ WHERE total_amt_usd > 0
 LIMIT 30;
 
 
-/* =====================================
-   3. GROWTH OVER TIME
-   ===================================== */
+-- =====================================
+-- 3. Growth Over Time
+-- =====================================
 
 -- Monthly growth in quantities and revenue
 SELECT
@@ -128,9 +128,9 @@ GROUP BY DATE_TRUNC('month', occurred_at)
 ORDER BY month;
 
 
-/* =====================================
-   4. REGIONAL SALES EFFICIENCY
-   ===================================== */
+-- =====================================
+-- 4. Regional Sales Efficiency
+-- =====================================
 
 -- Number of accounts by region
 SELECT
@@ -219,9 +219,9 @@ GROUP BY r.name
 ORDER BY total_revenue DESC;
 
 
-/* =====================================
-   5. INDUSTRY SEGMENTATION
-   ===================================== */
+-- =====================================
+-- 5. Industry Segmentation
+-- =====================================
 
 -- Count customers by industry category
 SELECT 'Food' AS industry_category, COUNT(*) AS customer_count
@@ -300,4 +300,80 @@ FROM (
 
     UNION ALL
 
-    SELECT id, '
+    SELECT id, 'Finance & Insurance' AS industry_category
+    FROM accounts
+    WHERE name ILIKE '%financ%'
+       OR name ILIKE '%Bank%'
+       OR name ILIKE '%Capital%'
+       OR name ILIKE '%Investment%'
+       OR name ILIKE '%Insurance%'
+       OR name ILIKE '%Insure%'
+       OR name ILIKE '%Policy%'
+       OR name ILIKE '%Life%'
+
+    UNION ALL
+
+    SELECT id, 'Energy' AS industry_category
+    FROM accounts
+    WHERE name ILIKE '%energy%'
+       OR name ILIKE '%power%'
+       OR name ILIKE '%electric%'
+       OR name ILIKE '%oil%'
+       OR name ILIKE '%gas%'
+       OR name ILIKE '%petro%'
+       OR name ILIKE '%renewable%'
+
+    UNION ALL
+
+    SELECT id, 'Automobile' AS industry_category
+    FROM accounts
+    WHERE name ILIKE '%auto%'
+       OR name ILIKE '%motor%'
+
+    UNION ALL
+
+    SELECT id, 'Tech' AS industry_category
+    FROM accounts
+    WHERE name ILIKE '%tech%'
+       OR name ILIKE '%software%'
+       OR name ILIKE '%digital%'
+       OR name ILIKE '%communication%'
+       OR name ILIKE '%solution%'
+       OR name ILIKE '%system%'
+
+    UNION ALL
+
+    SELECT id, 'Health' AS industry_category
+    FROM accounts
+    WHERE name ILIKE '%health%'
+       OR name ILIKE '%hospital%'
+       OR name ILIKE '%pharma%'
+) categorized_companies
+JOIN orders o
+    ON o.account_id = categorized_companies.id
+GROUP BY industry_category
+ORDER BY total_orders DESC;
+
+
+-- =====================================
+-- 6. Marketing Channel Analysis
+-- =====================================
+
+SELECT
+    q.region_id,
+    we.channel,
+    COUNT(q.region_id) AS counts
+FROM web_events we
+LEFT JOIN (
+    SELECT
+        a.id,
+        a.name,
+        a.sales_rep_id,
+        sr.region_id
+    FROM accounts a
+    LEFT JOIN sales_reps sr
+        ON a.sales_rep_id = sr.id
+) q
+    ON we.account_id = q.id
+GROUP BY we.channel, q.region_id
+ORDER BY q.region_id, counts ASC;

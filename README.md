@@ -24,11 +24,19 @@ SQL · DBeaver · PostgreSQL
 ## Files
 - `analysis_queries.sql` — all SQL queries used for analysis
 
-## Plots
-- `revenue_by_year.png`
-- `revenue_by_product.png`
-- `revenue_per_rep_by_region.png`
-- `revenue_by_industry.png`
+## Key Visual Insights
+
+### Monthly Revenue & Sales Volume Trends (2014–2016)
+![Revenue Trends](plots/revenue_sales_volume_trends.png)
+Revenue grew steadily from 2014 before accelerating sharply in mid-2016, reaching ~$2M by December 2016. Sales volume followed a similar but flatter trajectory, suggesting average order value increased over time.
+
+### Sales Representatives Allocation By Accounts
+![Rep Allocation](plots/sales_rep_allocation_by_accounts.png)
+Northeast holds the most accounts (107) but also the most reps (21), while Southeast and West manage comparable account loads with half the headcount.
+
+### Revenue per Sales Rep by Region
+![Revenue Per Rep](plots/revenue_per_rep_by_region.png)
+Southeast and West reps generate nearly 2x the revenue per person compared to Northeast ($645K and $593K vs. $369K), indicating the Northeast is overstaffed relative to its revenue output.
 
 ## How to Run
 Run queries in DBeaver or PostgreSQL using the relevant database tables.

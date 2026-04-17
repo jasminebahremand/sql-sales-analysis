@@ -4,7 +4,7 @@
 ## Overview
 Analyzed a $23.1M B2B sales database across 352 accounts to evaluate acquisition viability, identify operational inefficiencies, and surface revenue growth patterns for Parch & Posey, a B2B paper company.
 
-> Full write-up available at [portfolio URL]
+> Full write-up coming soon.
 
 ## Methods
 - Multi-table SQL joins across 5 relational tables

@@ -19,6 +19,25 @@ Strong revenue growth does not guarantee a sound acquisition. This analysis eval
 
 ---
 
+## Key Visuals
+
+### Monthly Revenue & Sales Volume Trends (2014–2016)
+![Revenue Trend](plots/revenue_trend.png)
+
+Revenue grew steadily from 2014 before accelerating sharply in mid-2016 — but volume and value growth diverged, suggesting average order size was increasing rather than new customer acquisition driving the trend.
+
+### Sales Rep Allocation by Region
+![Sales Rep Allocation](plots/sales_rep_allocation.png)
+
+The Northeast holds the most accounts and the most reps — but Southeast and West manage comparable account loads with half the headcount, signaling a structural inefficiency.
+
+### Revenue per Sales Rep by Region
+![Revenue Per Rep](plots/revenue_per_rep.png)
+
+Southeast and West reps generate nearly 2x the revenue per person compared to the Northeast ($645K and $593K vs $368K) — the strongest single indicator of resource misallocation in the dataset.
+
+---
+
 ## Methods
 - Multi-table SQL joins across 5 relational tables (orders, accounts, sales_reps, region, web_events)
 - Revenue and regional performance analysis
@@ -34,66 +53,22 @@ SQL · DBeaver · PostgreSQL
 
 ---
 
-## Files
-- `queries/01_current_state.sql` — top customers, total revenue, employee distribution
-- `queries/02_product_revenue.sql` — revenue by product type and monthly trends
-- `queries/03_growth_over_time.sql` — monthly growth in quantities and revenue
-- `queries/04_regional_performance.sql` — regional sales and rep efficiency analysis
-- `queries/05_industry_segmentation.sql` — customer segmentation by industry
-- `queries/06_channel_analysis.sql` — web engagement by channel and region
+## How to Run
+1. Load the Parch & Posey dataset into PostgreSQL
+2. Open DBeaver and connect to your database
+3. Run `analysis_queries.sql` top to bottom
 
 ---
 
 ## Data
 
-**Parch & Posey dataset** is a publicly available teaching dataset.
+**Parch & Posey Dataset:** https://www.kaggle.com/datasets/khalidbasalamah/sql-project-parch-and-posey-dataset-and-queries
 
-Search "Parch and Posey dataset" on GitHub or Kaggle to find the CSV files. Load into PostgreSQL or DBeaver before running queries.
-
----
-
-## How to Run
-
-1. Load the Parch & Posey dataset into PostgreSQL
-2. Open DBeaver and connect to your database
-3. Run queries in order from `01` through `06`
+Load into PostgreSQL or DBeaver before running queries.
 
 ---
 
-## Sample Queries
-
-**Revenue per sales rep by region — key finding:**
-```sql
-SELECT
-    r.name AS region,
-    COUNT(DISTINCT sr.id) AS num_sales_reps,
-    SUM(o.total_amt_usd) AS total_revenue,
-    ROUND(SUM(o.total_amt_usd) / NULLIF(COUNT(DISTINCT sr.id), 0), 2) AS revenue_per_rep
-FROM orders o
-JOIN accounts a ON o.account_id = a.id
-JOIN sales_reps sr ON a.sales_rep_id = sr.id
-JOIN region r ON sr.region_id = r.id
-GROUP BY r.name
-ORDER BY revenue_per_rep DESC;
-```
-
-**Industry segmentation by order volume:**
-```sql
-SELECT
-    industry_category,
-    COUNT(DISTINCT o.id) AS total_orders
-FROM (
-    SELECT id, 'Finance & Insurance' AS industry_category
-    FROM accounts
-    WHERE name ILIKE '%financ%' OR name ILIKE '%Bank%'
-       OR name ILIKE '%Capital%' OR name ILIKE '%Insurance%'
-    UNION ALL
-    SELECT id, 'Energy' AS industry_category
-    FROM accounts
-    WHERE name ILIKE '%energy%' OR name ILIKE '%power%'
-       OR name ILIKE '%oil%' OR name ILIKE '%gas%'
-) categorized
-JOIN orders o ON o.account_id = categorized.id
-GROUP BY industry_category
-ORDER BY total_orders DESC;
-```
+## Files
+- `analysis_queries.sql` — full analysis with inline comments
+- `plots/` — visualizations
+- `README.md`

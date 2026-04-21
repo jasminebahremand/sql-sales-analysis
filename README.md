@@ -22,17 +22,17 @@ Strong revenue growth does not guarantee a sound acquisition. This analysis eval
 ## Key Visuals
 
 ### Monthly Revenue & Sales Volume Trends (2014–2016)
-![Revenue Trend](plots/revenue_trend.png)
+![Revenue Trend](plots/revenue_sales_volume_trends.png)
 
 Revenue grew steadily from 2014 before accelerating sharply in mid-2016 — but volume and value growth diverged, suggesting average order size was increasing rather than new customer acquisition driving the trend.
 
 ### Sales Rep Allocation by Region
-![Sales Rep Allocation](plots/sales_rep_allocation.png)
+![Sales Rep Allocation](plots/sales_rep_allocation_by_accounts.png)
 
 The Northeast holds the most accounts and the most reps — but Southeast and West manage comparable account loads with half the headcount, signaling a structural inefficiency.
 
 ### Revenue per Sales Rep by Region
-![Revenue Per Rep](plots/revenue_per_rep.png)
+![Revenue Per Rep](plots/revenue_per_rep_by_region.png)
 
 Southeast and West reps generate nearly 2x the revenue per person compared to the Northeast ($645K and $593K vs $368K) — the strongest single indicator of resource misallocation in the dataset.
 

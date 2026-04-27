@@ -198,7 +198,7 @@ GROUP BY sales_rep_id
 ORDER BY num_accounts DESC;
 
 -- Revenue per sales rep by region
--- KEY FINDING: Northeast has 21 of 51 reps but lowest revenue per rep
+-- KEY FINDING: Northeast has 21 of 50 reps but lowest revenue per rep
 -- ($368K vs $645K in Southeast) — resources are misallocated
 SELECT
     r.name AS region,

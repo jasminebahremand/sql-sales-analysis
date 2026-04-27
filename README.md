@@ -62,7 +62,7 @@ SQL · DBeaver · PostgreSQL
 
 ## Data
 
-**Parch & Posey Dataset:** https://www.kaggle.com/datasets/khalidbasalamah/sql-project-parch-and-posey-dataset-and-queries
+**Parch & Posey Dataset:** [https://www.kaggle.com/datasets/khalidbasalamah/sql-project-parch-and-posey-dataset-and-queries](https://video.udacity-data.com/topher/2020/May/5eb5533b_parch-and-posey/parch-and-posey.sql)
 
 Load into PostgreSQL or DBeaver before running queries.
 

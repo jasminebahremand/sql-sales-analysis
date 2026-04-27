@@ -12,7 +12,7 @@ Strong revenue growth does not guarantee a sound acquisition. This analysis eval
 
 ## Key Findings
 - **Revenue grew 216% from 2014 to 2016** — but growth alone did not reflect operational readiness
-- **Sales rep allocation was critically misaligned** — the Northeast held 21 of 51 total reps but generated only $368K revenue per rep vs $645K in the Southeast and $593K in the West
+- **Sales rep allocation was critically misaligned** — the Northeast held 21 of 50 total reps but generated only $368K revenue per rep vs $645K in the Southeast and $593K in the West
 - **Finance & Insurance and Energy were the strongest customer segments** by order volume — indicating where future acquisition value would actually live
 - **Direct channel dominated web engagement** across all regions — Twitter and banner ads were the least utilized channels, suggesting significant untapped marketing upside
 - **Recommendation: Do not proceed** — operational inefficiencies, misallocated resources, and gaps in business intelligence outweighed the revenue growth story

@@ -23,7 +23,7 @@ A potential acquirer needs to know if growth is real and sustainable — or just
 
 ### Monthly Revenue & Sales Volume Trends (2014–2016)
 ![Revenue Trend](plots/revenue_sales_volume_trends.png)
-Revenue grew steadily before accelerating sharply in mid-2016 — but volume and value growth diverged, suggesting average order size was increasing rather than new customer acquisition driving the trend.
+Revenue accelerated through 2016. Average order value held roughly flat (~$3,000 per order), while new-customer acquisition climbed from about 2 per month in 2014 to 15-33 per month by late 2016, showing growth was driven by winning new customers rather than larger orders.
 
 ### Revenue per Sales Rep by Region
 ![Revenue Per Rep](plots/revenue_per_rep_by_region.png)

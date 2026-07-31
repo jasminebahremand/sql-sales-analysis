@@ -74,11 +74,19 @@ SELECT
     SUM(poster_amt_usd) AS poster_revenue
 FROM orders;
 
--- Product popularity by quantity sold
+-- Product popularity by UNITS SOLD (sum of quantity)
+-- NOTE: these are units sold, NOT order counts
 SELECT
-    SUM(standard_qty) AS standard_qty_sold,
-    SUM(gloss_qty) AS gloss_qty_sold,
-    SUM(poster_qty) AS poster_qty_sold
+    SUM(standard_qty) AS standard_units_sold,
+    SUM(gloss_qty) AS gloss_units_sold,
+    SUM(poster_qty) AS poster_units_sold
+FROM orders;
+
+-- Product popularity by ORDER COUNT (how many orders include each product)
+SELECT
+    COUNT(*) FILTER (WHERE standard_qty > 0) AS standard_order_count,
+    COUNT(*) FILTER (WHERE gloss_qty > 0)    AS gloss_order_count,
+    COUNT(*) FILTER (WHERE poster_qty > 0)   AS poster_order_count
 FROM orders;
 
 -- Revenue share by product type
@@ -121,6 +129,7 @@ LIMIT 30;
 -- =====================================
 -- 3. Growth Over Time
 -- =====================================
+
 -- Total revenue growth, first full year to last full year
 SELECT
     ROUND((y2016.rev - y2014.rev) / y2014.rev * 100, 2) AS revenue_growth_pct
@@ -129,6 +138,32 @@ FROM
      WHERE EXTRACT(YEAR FROM occurred_at) = 2014) AS y2014,
     (SELECT SUM(total_amt_usd) AS rev FROM orders
      WHERE EXTRACT(YEAR FROM occurred_at) = 2016) AS y2016;
+
+-- Yearly revenue and quantity (2014-2016) -- supports the per-year table
+SELECT
+    EXTRACT(YEAR FROM occurred_at) AS year,
+    SUM(standard_qty + gloss_qty + poster_qty) AS total_qty,
+    ROUND(SUM(total_amt_usd), 2) AS total_revenue
+FROM orders
+WHERE EXTRACT(YEAR FROM occurred_at) BETWEEN 2014 AND 2016
+GROUP BY EXTRACT(YEAR FROM occurred_at)
+ORDER BY year;
+
+-- Year-over-year growth rate (2014-15: 41.4%, 2015-16: 123.7%)
+-- Uses a window function (LAG) to compare each year to the one before
+SELECT
+    year,
+    total_revenue,
+    ROUND((total_revenue - LAG(total_revenue) OVER (ORDER BY year))
+          / LAG(total_revenue) OVER (ORDER BY year) * 100, 1) AS yoy_growth_pct
+FROM (
+    SELECT EXTRACT(YEAR FROM occurred_at) AS year,
+           SUM(total_amt_usd) AS total_revenue
+    FROM orders
+    WHERE EXTRACT(YEAR FROM occurred_at) BETWEEN 2014 AND 2016
+    GROUP BY EXTRACT(YEAR FROM occurred_at)
+) yearly
+ORDER BY year;
 
 -- Monthly growth in quantities and revenue across all product types
 SELECT
@@ -145,7 +180,7 @@ FROM orders
 GROUP BY DATE_TRUNC('month', occurred_at)
 ORDER BY month;
 
--- Average order value per month 
+-- Average order value per month (is order size growing? -- stays roughly flat)
 SELECT
     DATE_TRUNC('month', occurred_at) AS month,
     ROUND(SUM(total_amt_usd) / COUNT(id), 2) AS avg_order_value
@@ -153,7 +188,7 @@ FROM orders
 GROUP BY DATE_TRUNC('month', occurred_at)
 ORDER BY month;
 
--- New customers acquired per month (by first order date)
+-- New customers acquired per month, by first order date (rises through 2016)
 SELECT
     DATE_TRUNC('month', first_order) AS month,
     COUNT(*) AS new_customers
@@ -163,17 +198,19 @@ FROM (
     GROUP BY account_id
 ) first_orders
 GROUP BY DATE_TRUNC('month', first_order)
-ORDER BY month
-asc ;
+ORDER BY month ASC;
+
 
 -- =====================================
 -- 4. Regional Sales Performance & Rep Allocation
 -- =====================================
 
--- Number of accounts by region
+-- Accounts, reps, and average accounts per rep by region
 SELECT
     r.name AS region,
-    COUNT(a.id) AS num_accounts
+    COUNT(DISTINCT a.id) AS num_accounts,
+    COUNT(DISTINCT sr.id) AS num_reps,
+    ROUND(COUNT(DISTINCT a.id)::numeric / NULLIF(COUNT(DISTINCT sr.id), 0), 0) AS avg_accounts_per_rep
 FROM accounts a
 JOIN sales_reps sr
     ON sr.id = a.sales_rep_id
@@ -207,32 +244,15 @@ JOIN region r
 GROUP BY r.name
 ORDER BY total_amt_usd DESC;
 
--- Revenue by sales representative
-SELECT
-    a.sales_rep_id,
-    SUM(o.total_amt_usd) AS total_revenue
-FROM accounts a
-JOIN orders o
-    ON a.id = o.account_id
-GROUP BY a.sales_rep_id
-ORDER BY total_revenue DESC;
-
--- Number of accounts per sales representative
-SELECT
-    sales_rep_id,
-    COUNT(id) AS num_accounts
-FROM accounts
-GROUP BY sales_rep_id
-ORDER BY num_accounts DESC;
-
--- Revenue per sales rep by region
+-- Revenue per sales rep by region, with each region's share of total revenue
 -- KEY FINDING: Northeast has 21 of 50 reps but lowest revenue per rep
 -- ($368K vs $645K in Southeast) — resources are misallocated
 SELECT
     r.name AS region,
     COUNT(DISTINCT sr.id) AS num_sales_reps,
-    SUM(o.total_amt_usd) AS total_revenue,
-    ROUND(SUM(o.total_amt_usd) / NULLIF(COUNT(DISTINCT sr.id), 0), 2) AS revenue_per_rep
+    ROUND(SUM(o.total_amt_usd), 0) AS total_revenue,
+    ROUND(SUM(o.total_amt_usd) / (SELECT SUM(total_amt_usd) FROM orders) * 100, 2) AS revenue_proportion_pct,
+    ROUND(SUM(o.total_amt_usd) / NULLIF(COUNT(DISTINCT sr.id), 0), 0) AS revenue_per_rep
 FROM orders o
 JOIN accounts a
     ON o.account_id = a.id
@@ -326,7 +346,7 @@ WHERE name ILIKE '%health%'
    OR name ILIKE '%pharma%';
 
 -- Total orders by industry category
--- KEY FINDING: Finance & Insurance and Energy are top segments
+-- KEY FINDING: Finance & Insurance and Energy are top segments by order volume
 SELECT
     industry_category,
     COUNT(DISTINCT o.id) AS total_orders

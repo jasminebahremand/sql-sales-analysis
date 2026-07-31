@@ -121,6 +121,14 @@ LIMIT 30;
 -- =====================================
 -- 3. Growth Over Time
 -- =====================================
+-- Total revenue growth, first full year to last full year
+SELECT
+    ROUND((y2016.rev - y2014.rev) / y2014.rev * 100, 2) AS revenue_growth_pct
+FROM
+    (SELECT SUM(total_amt_usd) AS rev FROM orders
+     WHERE EXTRACT(YEAR FROM occurred_at) = 2014) AS y2014,
+    (SELECT SUM(total_amt_usd) AS rev FROM orders
+     WHERE EXTRACT(YEAR FROM occurred_at) = 2016) AS y2016;
 
 -- Monthly growth in quantities and revenue across all product types
 SELECT
@@ -137,6 +145,26 @@ FROM orders
 GROUP BY DATE_TRUNC('month', occurred_at)
 ORDER BY month;
 
+-- Average order value per month 
+SELECT
+    DATE_TRUNC('month', occurred_at) AS month,
+    ROUND(SUM(total_amt_usd) / COUNT(id), 2) AS avg_order_value
+FROM orders
+GROUP BY DATE_TRUNC('month', occurred_at)
+ORDER BY month;
+
+-- New customers acquired per month (by first order date)
+SELECT
+    DATE_TRUNC('month', first_order) AS month,
+    COUNT(*) AS new_customers
+FROM (
+    SELECT account_id, MIN(occurred_at) AS first_order
+    FROM orders
+    GROUP BY account_id
+) first_orders
+GROUP BY DATE_TRUNC('month', first_order)
+ORDER BY month
+asc ;
 
 -- =====================================
 -- 4. Regional Sales Performance & Rep Allocation

@@ -1,9 +1,11 @@
 # Is Parch & Posey Worth Acquiring?
+
 **SQL · Business Intelligence · M&A Analysis · $23.1M Dataset**
 
 ---
 
 ## Overview
+
 A potential acquirer needs to know if growth is real and sustainable — or just a number. This analysis evaluated whether Parch & Posey, a fictional B2B paper company, represented a viable acquisition target — examining $23.1M in lifetime revenue across 352 accounts to assess operational efficiency, sales performance, and marketing positioning.
 
 > Full write-up: https://jasminebahremand.my.canva.site/
@@ -11,6 +13,7 @@ A potential acquirer needs to know if growth is real and sustainable — or just
 ---
 
 ## Key Findings
+
 - **Revenue grew 216% from 2014 to 2016** — but growth alone did not reflect operational readiness
 - **Sales rep allocation was critically misaligned** — the Northeast held 21 of 50 reps but generated only $368K per rep vs $645K in the Southeast and $593K in the West
 - **Finance & Insurance and Energy were the strongest customer segments** by order volume — indicating where acquisition value would actually live
@@ -36,6 +39,7 @@ The Northeast holds the most accounts and the most reps — but Southeast and We
 ---
 
 ## Methods
+
 - Multi-table SQL joins across 5 relational tables (orders, accounts, sales_reps, region, web_events)
 - Revenue and regional performance analysis
 - Sales rep efficiency analysis (revenue per rep by region)
@@ -45,12 +49,22 @@ The Northeast holds the most accounts and the most reps — but Southeast and We
 
 ---
 
+## Limitations
+
+- **Keyword-based segmentation** — industries were inferred from account-name keywords, so classifications are approximate and some accounts go uncategorized.
+- **Revenue, not profitability** — the dataset has sales but no costs or margins, so the analysis measures top-line performance, not the profit an acquisition ultimately hinges on.
+- **Descriptive, not causal** — regional revenue-per-rep gaps flag where to investigate, but don't by themselves prove misallocation (territory difficulty and account mix could contribute).
+
+---
+
 ## Tech Stack
+
 SQL · DBeaver · PostgreSQL
 
 ---
 
 ## How to Run
+
 1. Load the Parch & Posey dataset into PostgreSQL
 2. Open DBeaver and connect to your database
 3. Run `analysis_queries.sql` top to bottom
@@ -58,6 +72,7 @@ SQL · DBeaver · PostgreSQL
 ---
 
 ## Data
+
 **Parch & Posey Dataset:** https://video.udacity-data.com/topher/2020/May/5eb5533b_parch-and-posey/parch-and-posey.sql
 
 Load into PostgreSQL or DBeaver before running queries.
@@ -65,6 +80,7 @@ Load into PostgreSQL or DBeaver before running queries.
 ---
 
 ## Files
+
 - `analysis_queries.sql` — full analysis with inline comments
 - `plots/` — visualizations
 - `README.md`

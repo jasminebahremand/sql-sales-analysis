@@ -57,6 +57,15 @@ The Northeast holds the most accounts and the most reps — but Southeast and We
 
 ---
 
+## Next Steps
+
+- **Obtain profitability data** — costs and margins, not just revenue, since an acquisition decision ultimately hinges on profit rather than top-line sales.
+- **Fill the data gaps** — acquire customer retention, satisfaction, and competitive-positioning data to resolve the material unknowns before committing.
+- **Validate the segmentation** — use real industry codes (e.g., SIC/NAICS) instead of account-name keywords to confirm the Finance & Insurance / Energy concentration risk.
+- **Quantify the reallocation upside** — model the revenue impact of redeploying reps from the overstaffed Northeast to higher-performing regions.
+
+---
+
 ## Tech Stack
 
 SQL · DBeaver · PostgreSQL
